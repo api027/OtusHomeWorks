@@ -17,7 +17,6 @@ api027@otus1:~$ uname -r
 5.4.0-144-generic
 
 3) Скачали с сайта новое ядро:
-# wget  https://kernel.ubuntu.com/mainline/v6.14.4/amd64/linux-headers-6.14.4-061404-generic_6.14.4-061404.202504251003_amd64.deb
 wget  https://kernel.ubuntu.com/mainline/v6.14.4/amd64/linux-headers-6.14.4-061404_6.14.4-061404.202504251003_all.deb
 wget  https://kernel.ubuntu.com/mainline/v6.14.4/amd64/linux-image-unsigned-6.14.4-061404-generic_6.14.4-061404.202504251003_amd64.deb
 wget  https://kernel.ubuntu.com/mainline/v6.14.4/amd64/linux-modules-6.14.4-061404-generic_6.14.4-061404.202504251003_amd64.deb
@@ -27,30 +26,7 @@ wget  https://kernel.ubuntu.com/mainline/v6.14.4/amd64/linux-modules-6.14.4-0614
 
 Результаты выполнения команды:
    sudo dpkg -i *.deb
-[sudo] password for api027: 
-Selecting previously unselected package linux-headers-6.14.4-061404.
-(Reading database ... 
-(Reading database ... 5%
-(Reading database ... 10%
-(Reading database ... 15%
-(Reading database ... 20%
-(Reading database ... 25%
-(Reading database ... 30%
-(Reading database ... 35%
-(Reading database ... 40%
-(Reading database ... 45%
-(Reading database ... 50%
-(Reading database ... 55%
-(Reading database ... 60%
-(Reading database ... 65%
-(Reading database ... 70%
-(Reading database ... 75%
-(Reading database ... 80%
-(Reading database ... 85%
-(Reading database ... 90%
-(Reading database ... 95%
-(Reading database ... 100%
-(Reading database ... 72296 files and directories currently installed.)
+
 Preparing to unpack linux-headers-6.14.4-061404_6.14.4-061404.202504251003_all.deb ...
 Unpacking linux-headers-6.14.4-061404 (6.14.4-061404.202504251003) ...
 Selecting previously unselected package linux-image-unsigned-6.14.4-061404-generic.
@@ -109,7 +85,6 @@ api027@otus1:~$ uname -r
 6) Обновили загрузчик:
    
 api027@otus1:~$ sudo update-grub
-[sudo] password for api027:
 Sourcing file `/etc/default/grub'
 Sourcing file `/etc/default/grub.d/init-select.cfg'
 Generating grub configuration file ...
