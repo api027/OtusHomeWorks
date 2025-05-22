@@ -530,6 +530,12 @@ rm -f /home/file{11..20}
 root@otus1:~# sudo lvconvert --merge /dev/vg_home/home_snap
   Merging of volume vg_home/home_snap started.
   vg_home/lv_home: Merged: 100.00%
+------------------------------Проверим наличие удаленных файлов------------------
+api027@otus1:/home$ ls
+api027  file11  file14  file17  file2   file4  file7  lost+found
+file1   file12  file15  file18  file20  file5  file8
+file10  file13  file16  file19  file3   file6  file9
+
 
 
 
