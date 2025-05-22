@@ -522,7 +522,10 @@ rm -f /home/file{11..20}
 
 
 ----------------Восстановление файлов из снэпшота. 
-root@otus1:~# umount /home
+# root@otus1:~# umount /home  // Здесь размонтировать наживую не удалось с ошибкой  /home: target is busy.
+                              // Пришлось редактировать fstab, комментировать монтирование /home,
+                              // перезагружаться и делать lvconvert 
+
 
 root@otus1:~# sudo lvconvert --merge /dev/vg_home/home_snap
   Merging of volume vg_home/home_snap started.
