@@ -338,6 +338,10 @@ restart remote-fs.target
 
 
 P.S.
-unmount nfs раздела на клиенте  получился только с umount -l
+1.) Unmount nfs раздела на клиенте  получился только с umount -l
 -l, --lazy
            Lazy unmount. Detach the filesystem from the file hierarchy now, and clean up all references to this filesystem as soon as it is not busy anymore.
+
+2.) “>” is the output redirection operator used for overwriting files that already exist in the directory. 
+While, the “>>” is an output operator as well, but, it appends the data of an existing file
+
