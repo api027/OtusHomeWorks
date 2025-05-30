@@ -256,17 +256,17 @@ root@otus3:/mnt/upload# mount | grep 166
 10.0.1.166:/srv/share/ on /mnt type nfs (rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=10.0.1.166,mountvers=3,mountport=45272,mountproto=udp,local_lock=none,addr=10.0.1.166)
 
 
-------Видим, что mountvers=3. Т.е. NFSv3
+------Видим, что mountvers=3. Т.е. NFSv3, что и необходимо согласно заданию.
 
-------На клиенте otus3 создали файл -------------------
+------На клиенте otus3 в подключенном каталоге NFS сервера создали файл -------------------
 root@otus3:/mnt/upload# touch test_upload_from_otus3
 
-------На сервере otus 2 его увидели. Вот он:
+------На сервере otus 2 новосозданный файл увидели. Вот он:
 root@otus2:/srv/share/upload# ls
 test1  test_upload_from_otus3
 
 
----------На сервере otus2 проверяем состояние служб "публикации" файлов:
+---------На сервере otus2 проверяем состояние служб NFS для "публикации" файлов:
 root@otus2:/srv/share/upload# showmount -a 10.0.1.166
 All mount points on 10.0.1.166:
 10.0.1.167:/srv/share
@@ -274,7 +274,7 @@ All mount points on 10.0.1.166:
 root@otus2:/srv/share/upload# exportfs -s
 /srv/share  10.0.1.167/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
 
------После перезагрузки  otus2 и otus 3  мы смогли на клиенте создать файл на сервере:
+-----После перезагрузки  otus2 и otus 3  мы смогли на клиенте создать файл на сервере, значит каталоги отдаются и монтируются в автоматическом режиме:
 api027@otus2:/srv/share$ cd /srv/share/upload/
 api027@otus2:/srv/share/upload$ ls -lha
 -rw-r--r-- 1 nobody nogroup    0 May 29 10:17 final_test_file
