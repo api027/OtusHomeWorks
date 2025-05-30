@@ -15,21 +15,17 @@
 root@otus2:~# lsb_release -a
 Description:    Ubuntu 24.04.2 LTS
 Release:        24.04
-
-
-
 ------------------Otus2 IP 10.0.1.166/24---------------------------
 root@otus2:~# ifconfig -a | grep inet
         inet 10.0.1.166  netmask 255.255.255.0  broadcast 10.0.1.255
 
 
------------ВМ Otus3 - будет клиентом NFS.
 
+-----------ВМ Otus3 - будет клиентом NFS.
 api027@otus3:~$ lsb_release -a
 No LSB modules are available.
 Description:    Ubuntu 24.04.2 LTS
 Release:        24.04
-
 
 ------------------Otus3 IP 10.0.1.167/24-------------
 api027@otus3:~$ ifconfig -a | grep inet
@@ -37,10 +33,8 @@ api027@otus3:~$ ifconfig -a | grep inet
         
 
 2.) На сервере NFS  otus 2 подготовить и экспортировать директорию. В экспортированной директории должна быть поддиректория с именем upload с правами на запись в неё.
-
 ------------Устанавливаем nfs-сервер c silent подтверждением.
- 
-root@otus2:~# apt install -y nfs-kernel-server
+ root@otus2:~# apt install -y nfs-kernel-server
 Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
@@ -181,11 +175,11 @@ manage-gids=y
 # principal=
 
 -------------------------Просматриваем открытые порты на NFS сервере(111 и 2049)------------
-ss -t(tcp)
-    -n(no resolving)
-    -p(show process using socket)
-    -l(display only listening sockets)
-    -u(udp)
+--  ss -t(tcp)
+--    -n(no resolving)
+--    -p(show process using socket)
+--    -l(display only listening sockets)
+ --   -u(udp)
 root@otus2:~# ss -tnplu | grep 111
 udp   UNCONN 0      0            0.0.0.0:111        0.0.0.0:*    users:(("rpcbind",pid=12384,fd=5),("systemd",pid=1,fd=239))
 udp   UNCONN 0      0               [::]:111           [::]:*    users:(("rpcbind",pid=12384,fd=7),("systemd",pid=1,fd=241))
@@ -289,6 +283,7 @@ api027@otus2:/srv/share/upload$ ls -lha
 
 
 -------------Создание скриптов для настройки  сервера и клиента---------------------
+-- Перед запуском делаем chmod +x
  
 -----Скрипт для настройки NFS-сервера.
 root@otus2:/home/api027# cat nfss_script.sh
@@ -339,6 +334,10 @@ restart remote-fs.target
 
 ---------Конец домашней работы----------------------------------
 
-PS unmount nfs раздела на клиенте  получился только с umount -l
+
+
+
+P.S.
+unmount nfs раздела на клиенте  получился только с umount -l
 -l, --lazy
            Lazy unmount. Detach the filesystem from the file hierarchy now, and clean up all references to this filesystem as soon as it is not busy anymore.
