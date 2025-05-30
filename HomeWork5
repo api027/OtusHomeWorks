@@ -194,14 +194,14 @@ tcp   LISTEN 0      64              [::]:2049          [::]:*
 mkdir -p /srv/share/upload
 // -p создаем дочерние каталоги
 
---------------Рекурсивно удаляем  права на каталоги ----------------
+--------------Рекурсивно удаляем  владельцев на подкаталоги NFS ----------------
 chown -R nobody:nogroup /srv/share 
 
 ------------Устанавливаем для  upload полный доступ на чтение, ЗАПИСЬ и выполнение для владельца, группы и всех остальных пользователей.
 chmod 0777 /srv/share/upload 
 
 
-----------------Редакстируем файл exports
+----------------Редактируем файл exports, здесь задаются права доступа
 root@otus2:~# cat /etc/exports
 # /etc/exports: the access control list for filesystems which may be exported
 
@@ -220,7 +220,7 @@ root@otus2:~# cat /etc/exports
 root@otus2:~# exportfs -r
 exportfs: /etc/exports [1]: Neither 'subtree_check' or 'no_subtree_check' specified for export "10.0.1.167/32:/srv/share".
   Assuming default behaviour ('no_subtree_check').
--------------------Потом успешно-----------------
+-------------------Потом успешно, добавив параметр subtree_check -----------------
 root@otus2:~# cat << EOF > /etc/exports
 /srv/share 10.0.1.167/32(rw,sync,root_squash,subtree_check)
 EOF
