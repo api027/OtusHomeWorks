@@ -244,7 +244,7 @@ root@otus2:~# cat /etc/exports
 -------Root_squash prevents the root user on a client machine from having superuser privileges on the NFS server
 ```
 
-**Экспортируем директорию сначала с ошибкой**
+**Экспортируем директорию сначала с предупреждением**
 ```
 root@otus2:~# exportfs -r
 exportfs: /etc/exports [1]: Neither 'subtree_check' or 'no_subtree_check' specified for export "10.0.1.167/32:/srv/share".
