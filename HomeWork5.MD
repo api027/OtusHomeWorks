@@ -8,7 +8,7 @@
 Задачи: 
  1. Запустить 2 виртуальных машины (сервер NFS и клиента).
  2. На сервере NFS подготовить и экспортировать директорию. В экспортированной директории должна быть поддиректория с именем upload с правами на запись в неё.
- 3. Реализовать атоматическое монтирование на клиенте при старте виртуальной машины (systemd, autofs или fstab — любым способом) с использованием NFSv3
+ 3. Реализовать атоматическое монтирование на клиенте при старте виртуальной машины (systemd, autofs или fstab — любым способом) с использованием NFSv3.
 
 
 #### *Выполнение домашнего задания.* 
@@ -46,7 +46,7 @@ api027@otus3:~$ ifconfig -a | grep inet
 **2. На сервере NFS  OTUS2 подготовить и экспортировать директорию.  
  В экспортированной директории должна быть поддиректория с именем upload с правами на запись в неё.**
 
-**Устанавливаем nfs-сервер c silent подтверждением.**
+**Устанавливаем nfs-сервер c silent подтверждением:**
  ```
  root@otus2:~# apt install -y nfs-kernel-server
 Reading package lists... Done
@@ -84,7 +84,7 @@ info: Adding system user `statd' (UID 111) ...
 info: Adding new user `statd' (UID 111) with group `nogroup' ...
 ```
 
-**Смотрим настройки сервера в файле /etc/nfs.conf**  
+**Смотрим настройки сервера в файле /etc/nfs.conf:**  
 
 ```
 root@otus2:~# cat /etc/nfs.conf
@@ -191,7 +191,7 @@ manage-gids=y
 # principal=
 ```
 
-**Просматриваем открытые порты на NFS сервере(111 и 2049)**  
+**Просматриваем открытые порты на NFS сервере(интересуют 111 и 2049):**  
 ```
 Параметры  команды  ss:
 	-t(tcp)
@@ -210,23 +210,23 @@ tcp   LISTEN 0      64           0.0.0.0:2049       0.0.0.0:*
 tcp   LISTEN 0      64              [::]:2049          [::]:*
 ```
 
-**Создаем каталог для публикации через NFS**  
+**Создаем каталог для публикации через NFS:**  
 ```
 mkdir -p /srv/share/upload    
 -p: создаем дочерние каталоги
 ```
 
-**Рекурсивно удаляем  владельцев на подкаталоги NFS**  
+**Рекурсивно удаляем  владельцев на подкаталоги NFS:**  
 ```
 chown -R nobody:nogroup /srv/share
 ```
 
-**Устанавливаем для  upload полный доступ на чтение, ЗАПИСЬ и выполнение для владельца, группы и всех остальных пользователей.**  
+**Устанавливаем для  upload полный доступ на чтение, ЗАПИСЬ и выполнение для владельца, группы и всех остальных пользователей:**  
 ```
 chmod 0777 /srv/share/upload 
 ```
 
-**Редактируем файл exports, здесь задаются права доступа**  
+**Редактируем файл exports, здесь задаются права доступа:**  
 ```
 root@otus2:~# cat /etc/exports
 /etc/exports: the access control list for filesystems which may be exported
@@ -243,21 +243,21 @@ root@otus2:~# cat /etc/exports
 -------Root_squash prevents the root user on a client machine from having superuser privileges on the NFS server
 ```
 
-**Экспортируем директорию сначала с предупреждением**
+**Экспортируем директорию сначала с предупреждением:**
 ```
 root@otus2:~# exportfs -r
 exportfs: /etc/exports [1]: Neither 'subtree_check' or 'no_subtree_check' specified for export "10.0.1.167/32:/srv/share".
   Assuming default behaviour ('no_subtree_check').
 ```
 
-**Потом успешно, добавив параметр subtree_check**
+**а потом успешно, добавив параметр subtree_check:**
 ```root@otus2:~# cat << EOF > /etc/exports
 /srv/share 10.0.1.167/32(rw,sync,root_squash,subtree_check)
 EOF
 root@otus2:~# exportfs -r
 ```
 
-**Просматриваем текущий export list на nfs сервере**  
+**Просматриваем текущий export list на NFS сервере:**  
 ```
 root@otus2:~# exportfs -s
 /srv/share  10.0.1.167/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
@@ -300,7 +300,7 @@ root@otus3:/mnt/upload# mount | grep 166
 
 ##### Видим, что mountvers=3. Т.е. NFSv3, что и необходимо согласно заданию.
 
-##### На клиенте otus3 в подключенном каталоге NFS сервера создали файл  
+##### На клиенте otus3 в подключенном каталоге NFS сервера создали файл:  
 
 ```root@otus3:/mnt/upload# touch test_upload_from_otus3```
 
@@ -328,7 +328,7 @@ api027@otus2:/srv/share/upload$ ls -lha
 ```
 
 ##
-**3.1. Создание скриптов для настройки сервера и клиента**
+**3.1. Создание скриптов для настройки сервера и клиента.**
 ```
 Перед запуском делаем chmod +x
 ```
@@ -390,14 +390,14 @@ daemon reloaded
 restart remote-fs.target
 ```
 
-**Ошибок не выдает**
+**Ошибок не выдает.**
 
-**Конец домашней работы**
-
-
+**Конец домашней работы.**
 
 
-**P.S.**
+
+
+**Заметки:**
 1.) Unmount nfs раздела на клиенте  получился только с **umount -l**
 -l, --lazy
            Lazy unmount. Detach the filesystem from the file hierarchy now, and clean up all references to this filesystem as soon as it is not busy anymore.
