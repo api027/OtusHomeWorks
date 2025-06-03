@@ -320,7 +320,7 @@ All mount points on 10.0.1.166:
 root@otus2:/srv/share/upload# exportfs -s
 /srv/share  10.0.1.167/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
 ```
-**После перезагрузки  otus2 и otus 3  мы смогли на клиенте создать файл на сервере, значит каталоги отдаются и монтируются в автоматическом режиме:**
+**После перезагрузки  otus2 и otus3  мы смогли на клиенте создать файл на сервере, значит каталоги отдаются и монтируются в автоматическом режиме:**
 
 ```
 api027@otus2:/srv/share$ cd /srv/share/upload/
