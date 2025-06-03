@@ -1,7 +1,9 @@
-Домашнее задание.
-Работа с  NFS.
+#### *Домашнее задание.*
+#### *Работа с  NFS.*
+##
 
-Цель домашнего задания
+
+**Цель домашнего задания:**  
 	Научиться самостоятельно разворачивать сервис NFS и подключать к нему клиентов.
 Задачи: 
  1. Запустить 2 виртуальных машины (сервер NFS и клиента).
@@ -9,32 +11,43 @@
  3. Реализовать атоматическое монтирование на клиенте при старте виртуальной машины (systemd, autofs или fstab — любым способом) с использованием NFSv3
 
 
-## *Выполнение домашнего задания.* 
-
-1. *Установлены 2 виртуальных машины Ubuntu 22.04*
-#*ВМ Otus2 - будет сервером NFS.*
+#### *Выполнение домашнего задания.* 
+##
+**1. Установлены 2 виртуальных машины Ubuntu 22.04**  
+**ВМ OTUS2 - будет сервером NFS.** 
+```
 root@otus2:~# lsb_release -a
 Description:    Ubuntu 24.04.2 LTS
 Release:        24.04
-------------------Otus2 IP 10.0.1.166/24---------------------------
-root@otus2:~# ifconfig -a | grep inet
+```
+  
+  
+**OTUS2 IP 10.0.1.166/24**
+```root@otus2:~# ifconfig -a | grep inet
         inet 10.0.1.166  netmask 255.255.255.0  broadcast 10.0.1.255
 
+```
+**ВМ OTUS3 будет клиентом NFS.**
+		
 
-
------------ВМ Otus3 - будет клиентом NFS.
-api027@otus3:~$ lsb_release -a
+```api027@otus3:~$ lsb_release -a
 No LSB modules are available.
 Description:    Ubuntu 24.04.2 LTS
 Release:        24.04
+```
 
-------------------Otus3 IP 10.0.1.167/24-------------
+**OTUS3 IP: 10.0.1.167/24**  
+```
 api027@otus3:~$ ifconfig -a | grep inet
         inet 10.0.1.167  netmask 255.255.255.0  broadcast 10.0.1.255
-        
+```    
+##
 
-2.) На сервере NFS  otus 2 подготовить и экспортировать директорию. В экспортированной директории должна быть поддиректория с именем upload с правами на запись в неё.
-------------Устанавливаем nfs-сервер c silent подтверждением.
+2. **На сервере NFS  OTUS2 подготовить и экспортировать директорию.  
+ В экспортированной директории должна быть поддиректория с именем upload с правами на запись в неё.**
+
+**Устанавливаем nfs-сервер c silent подтверждением.**
+ ```
  root@otus2:~# apt install -y nfs-kernel-server
 Reading package lists... Done
 Building dependency tree... Done
@@ -69,9 +82,11 @@ Creating config file /etc/nfs.conf with new version
 info: Selecting UID from range 100 to 999 ...
 info: Adding system user `statd' (UID 111) ...
 info: Adding new user `statd' (UID 111) with group `nogroup' ...
+```
 
+**Смотрим настройки сервера в файле /etc/nfs.conf**  
 
---------------Смотрим настройки сервера в файле /etc/nfs.conf
+```
 root@otus2:~# cat /etc/nfs.conf
 #
 # This is a general configuration for the
@@ -174,13 +189,18 @@ manage-gids=y
 #
 [svcgssd]
 # principal=
+```
 
--------------------------Просматриваем открытые порты на NFS сервере(111 и 2049)------------
---  ss -t(tcp)
---    -n(no resolving)
---    -p(show process using socket)
---    -l(display only listening sockets)
- --   -u(udp)
+**Просматриваем открытые порты на NFS сервере(111 и 2049)**  
+```
+
+Параметры  ss:
+	-t(tcp)
+	-n(no resolving)
+	-p(show process using socket)
+	-l(display only listening sockets)
+	-u(udp)
+	
 root@otus2:~# ss -tnplu | grep 111
 udp   UNCONN 0      0            0.0.0.0:111        0.0.0.0:*    users:(("rpcbind",pid=12384,fd=5),("systemd",pid=1,fd=239))
 udp   UNCONN 0      0               [::]:111           [::]:*    users:(("rpcbind",pid=12384,fd=7),("systemd",pid=1,fd=241))
@@ -189,25 +209,32 @@ tcp   LISTEN 0      4096            [::]:111           [::]:*    users:(("rpcbin
 root@otus2:~# ss -tnplu | grep 2049
 tcp   LISTEN 0      64           0.0.0.0:2049       0.0.0.0:*
 tcp   LISTEN 0      64              [::]:2049          [::]:*
+```
 
+**Создаем каталог для публикации через NFS**  
+```
+mkdir -p /srv/share/upload    
+-p: создаем дочерние каталоги
+```
 
----------------------Создаем каталог для публикации через NFS---------------------------
-mkdir -p /srv/share/upload
-// -p создаем дочерние каталоги
+**Рекурсивно удаляем  владельцев на подкаталоги NFS**  
+```
+chown -R nobody:nogroup /srv/share
+```
 
---------------Рекурсивно удаляем  владельцев на подкаталоги NFS ----------------
-chown -R nobody:nogroup /srv/share 
-
-------------Устанавливаем для  upload полный доступ на чтение, ЗАПИСЬ и выполнение для владельца, группы и всех остальных пользователей.
+**Устанавливаем для  upload полный доступ на чтение, ЗАПИСЬ и выполнение для владельца, группы и всех остальных пользователей.**  
+```
 chmod 0777 /srv/share/upload 
+```
 
-
-----------------Редактируем файл exports, здесь задаются права доступа
+**Редактируем файл exports, здесь задаются права доступа**  
+```
 root@otus2:~# cat /etc/exports
-# /etc/exports: the access control list for filesystems which may be exported
+/etc/exports: the access control list for filesystems which may be exported
 
-# Example for NFSv2 and NFSv3:
-# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+
+** Example for NFSv2 and NFSv3:
+ /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)**
 
 root@otus2:~# cat << EOF > /etc/exports
 /srv/share 10.0.1.167/32(rw,sync,root_squash)
@@ -215,78 +242,103 @@ EOF
 root@otus2:~# cat /etc/exports
 /srv/share 10.0.1.167/32(rw,sync,root_squash)
 -------Root_squash prevents the root user on a client machine from having superuser privileges on the NFS server
+```
 
------------Экспортируем директорию
-------------сначала с ошибкой------------------
+**Экспортируем директорию сначала с ошибкой**
+```
 root@otus2:~# exportfs -r
 exportfs: /etc/exports [1]: Neither 'subtree_check' or 'no_subtree_check' specified for export "10.0.1.167/32:/srv/share".
   Assuming default behaviour ('no_subtree_check').
--------------------Потом успешно, добавив параметр subtree_check -----------------
-root@otus2:~# cat << EOF > /etc/exports
+```
+
+**Потом успешно, добавив параметр subtree_check**
+```root@otus2:~# cat << EOF > /etc/exports
 /srv/share 10.0.1.167/32(rw,sync,root_squash,subtree_check)
 EOF
 root@otus2:~# exportfs -r
+```
 
-
--------------Просматриваем текущий export list на nfs сервере
+**Просматриваем текущий export list на nfs сервере**  
+```
 root@otus2:~# exportfs -s
 /srv/share  10.0.1.167/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
 
+```
+##
 
+**3. Реализовать атоматическое монтирование на клиенте при старте виртуальной машины OTUS3 (systemd, autofs или fstab — любым способом) с использованием NFSv3.** 
 
-3.) Реализовать атоматическое монтирование на клиенте при старте виртуальной машины OTUS3 (systemd, autofs или fstab — любым способом) с использованием NFSv3
----------------Инсталлируем клиент из репозитория------------------
+**Инсталлируем клиент из репозитория:** 
+```
 sudo apt install nfs-common
+```
 
-
------------Для автоматического монтирования правим fstab
+**Для автоматического монтирования правим fstab:**
+```
 echo "10.0.1.166:/srv/share/ /mnt nfs vers=3,noauto,x-systemd.automount 0 0" >> /etc/fstab
+```
 
------------Рассматриваем fstab
+**Рассматриваем fstab:**  
+```
 root@otus3:~# cat /etc/fstab | grep 166
 10.0.1.166:/srv/share/ /mnt nfs vers=3,noauto,x-systemd.automount 0 0
-
------------Перегрузим конфигурацию systemd
+```
+**Перегрузим конфигурацию systemd:**
+```
 systemctl daemon-reload
+```
 
------------Перемонтируем fstab ---------
+**Перемонтируем fstab:**
+```
 systemctl restart remote-fs.target
+```
 
--------Перезагрузили и смотрим вывод mount
+***Перезагрузили и смотрим вывод mount:***  
+```
 root@otus3:/mnt/upload# mount | grep 166
 10.0.1.166:/srv/share/ on /mnt type nfs (rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=10.0.1.166,mountvers=3,mountport=45272,mountproto=udp,local_lock=none,addr=10.0.1.166)
+```
 
+##### Видим, что mountvers=3. Т.е. NFSv3, что и необходимо согласно заданию.
 
-------Видим, что mountvers=3. Т.е. NFSv3, что и необходимо согласно заданию.
+##### На клиенте otus3 в подключенном каталоге NFS сервера создали файл  
 
-------На клиенте otus3 в подключенном каталоге NFS сервера создали файл -------------------
-root@otus3:/mnt/upload# touch test_upload_from_otus3
+```root@otus3:/mnt/upload# touch test_upload_from_otus3```
 
-------На сервере otus 2 новосозданный файл увидели. Вот он:
+**На сервере OTUS2 новосозданный файл увидели. Вот он:**
+```
 root@otus2:/srv/share/upload# ls
 test1  test_upload_from_otus3
+```
 
+**На сервере otus2 проверяем состояние служб NFS для "публикации" файлов:**  
 
----------На сервере otus2 проверяем состояние служб NFS для "публикации" файлов:
-root@otus2:/srv/share/upload# showmount -a 10.0.1.166
+```root@otus2:/srv/share/upload# showmount -a 10.0.1.166
 All mount points on 10.0.1.166:
 10.0.1.167:/srv/share
 
 root@otus2:/srv/share/upload# exportfs -s
 /srv/share  10.0.1.167/32(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,root_squash,no_all_squash)
+```
+**После перезагрузки  otus2 и otus 3  мы смогли на клиенте создать файл на сервере, значит каталоги отдаются и монтируются в автоматическом режиме:**
 
------После перезагрузки  otus2 и otus 3  мы смогли на клиенте создать файл на сервере, значит каталоги отдаются и монтируются в автоматическом режиме:
+```
 api027@otus2:/srv/share$ cd /srv/share/upload/
 api027@otus2:/srv/share/upload$ ls -lha
 -rw-r--r-- 1 nobody nogroup    0 May 29 10:17 final_test_file
+```
+
+##
+**3.1. Создание скриптов для настройки сервера и клиента**
+```
+Перед запуском делаем chmod +x
+```
 
 
+**Скрипт для настройки NFS-сервера.** 
 
 
--------------Создание скриптов для настройки  сервера и клиента---------------------
--- Перед запуском делаем chmod +x
- 
------Скрипт для настройки NFS-сервера.
+```
 root@otus2:/home/api027# cat nfss_script.sh
 #!/bin/bash
 apt install -y nfs-kernel-server
@@ -299,19 +351,24 @@ cat << EOF > /etc/exports
 EOF
 # End of Pass multi-line string to a file in Bash
 exportfs -r
+```
 
----------Запускается без ошибок:
+**Запускается без ошибок:**
+
+```
 root@otus2:/home/api027# ./nfss_script.sh
 Reading package lists... Done
 Building dependency tree... Done
 Reading state information... Done
 nfs-kernel-server is already the newest version (1:2.6.4-3ubuntu5.1).
 0 upgraded, 0 newly installed, 0 to remove and 80 not upgraded.
+```
 
 
 
 
------Скрипт для настройки NFS-клиента.
+**Скрипт для настройки NFS-клиента.**
+```
 root@otus3:~# cat nfsc_script.sh
 #!/bin/bash
 sudo apt install -y nfs-common
@@ -320,9 +377,10 @@ echo "daemon reloaded"
 systemctl daemon-reload
 echo "restart remote-fs.target"
 systemctl restart remote-fs.target
+```
 
-
---------Проверка запуска:------
+***Проверка запуска:***
+```
 root@otus3:~# ./nfsc_script.sh
 Reading package lists... Done
 Building dependency tree... Done
@@ -331,18 +389,20 @@ nfs-common is already the newest version (1:2.6.4-3ubuntu5.1).
 0 upgraded, 0 newly installed, 0 to remove and 79 not upgraded.
 daemon reloaded
 restart remote-fs.target
--------Ошибок не выдает-------------
+```
 
----------Конец домашней работы----------------------------------
+**Ошибок не выдает**
+
+**Конец домашней работы**
 
 
 
 
-P.S.
-1.) Unmount nfs раздела на клиенте  получился только с umount -l
+###P.S.###
+1.) Unmount nfs раздела на клиенте  получился только с **umount -l**
 -l, --lazy
            Lazy unmount. Detach the filesystem from the file hierarchy now, and clean up all references to this filesystem as soon as it is not busy anymore.
 
-2.) “>” is the output redirection operator used for overwriting files that already exist in the directory. 
-While, the “>>” is an output operator as well, but, it appends the data of an existing file
-
+2.) **“>”** is the output redirection operator used for **overwriting** files that already exist in the directory. 
+While, the “**>>**” is an output operator as well, but, it **appends** the data of an existing file
+**
