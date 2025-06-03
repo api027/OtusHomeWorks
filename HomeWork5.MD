@@ -30,7 +30,8 @@ Release:        24.04
 **ВМ OTUS3 будет клиентом NFS.**
 		
 
-```api027@otus3:~$ lsb_release -a
+```
+api027@otus3:~$ lsb_release -a
 No LSB modules are available.
 Description:    Ubuntu 24.04.2 LTS
 Release:        24.04
