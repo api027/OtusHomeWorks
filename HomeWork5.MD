@@ -43,7 +43,7 @@ api027@otus3:~$ ifconfig -a | grep inet
 ```    
 ##
 
-2. **На сервере NFS  OTUS2 подготовить и экспортировать директорию.  
+**2. На сервере NFS  OTUS2 подготовить и экспортировать директорию.  
  В экспортированной директории должна быть поддиректория с именем upload с правами на запись в неё.**
 
 **Устанавливаем nfs-сервер c silent подтверждением.**
@@ -192,15 +192,13 @@ manage-gids=y
 ```
 
 **Просматриваем открытые порты на NFS сервере(111 и 2049)**  
-```
-
-Параметры  ss:
+** Параметры  команды  ss:**
 	-t(tcp)
 	-n(no resolving)
 	-p(show process using socket)
 	-l(display only listening sockets)
 	-u(udp)
-	
+```	
 root@otus2:~# ss -tnplu | grep 111
 udp   UNCONN 0      0            0.0.0.0:111        0.0.0.0:*    users:(("rpcbind",pid=12384,fd=5),("systemd",pid=1,fd=239))
 udp   UNCONN 0      0               [::]:111           [::]:*    users:(("rpcbind",pid=12384,fd=7),("systemd",pid=1,fd=241))
