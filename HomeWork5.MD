@@ -398,6 +398,7 @@ restart remote-fs.target
 
 
 **Заметки:**
+
 **1.)** Unmount nfs раздела на клиенте  получился только с **umount -l**
 -l, --lazy
            Lazy unmount. Detach the filesystem from the file hierarchy now, and clean up all references to this filesystem as soon as it is not busy anymore.
