@@ -227,7 +227,7 @@ chown -R nobody:nogroup /srv/share
 chmod 0777 /srv/share/upload 
 ```
 
-**Редактируем файл exports, здесь задаются права доступа:**  
+**Редактируем файл exports, здесь задаются опции доступа:**  
 ```
 root@otus2:~# cat /etc/exports
 /etc/exports: the access control list for filesystems which may be exported
