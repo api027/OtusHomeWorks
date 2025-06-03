@@ -14,7 +14,7 @@
 #### *Выполнение домашнего задания.* 
 ##
 **1. Установлены 2 виртуальных машины Ubuntu 22.04**  
-**ВМ OTUS2 - будет сервером NFS.** 
+**VM OTUS2 - сервер NFS.** 
 ```
 root@otus2:~# lsb_release -a
 Description:    Ubuntu 24.04.2 LTS
@@ -27,7 +27,7 @@ Release:        24.04
         inet 10.0.1.166  netmask 255.255.255.0  broadcast 10.0.1.255
 
 ```
-**ВМ OTUS3 будет клиентом NFS.**
+**VM OTUS3 - клиент NFS.**
 		
 
 ```
